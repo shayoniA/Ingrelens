@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ingredient Health Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alata&family=Baskervville:ital,wght@0,400..700;1,400..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h2 class="heading">Upload Ingredient Image</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Analyze</button>
+    </form>
+
+    <h3 class="scorehead hidden" id="score_head">Total Health Score</h3>
+    <div class="hidden" id="score">--</div>
+    <div class="table-container hidden" id="resultsTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Bad</th>
+                    <th>Good</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="b"></td>
+                    <td id="g"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- .......................................... -->
+    <div id="popupOverlay" class="hidden overlay-blur">
+        <div id="popupBox">
+            <button id="closePopup" style="display: none;">✖</button>
+            <div id="markdownContent">Loading...</div>
+        </div>
+    </div>
+    <!-- .......................................... -->
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        document.getElementById('uploadForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            document.getElementById('score').innerText = data.total_score;
+            function renderIngredients(id, list, className) {
+                document.getElementById(id).innerHTML = list.map(ing =>
+                    `<span class="ingredient ${className}">${ing.trim()}</span>`
+                ).join(', ');
+            }
+            renderIngredients('b', data.categories['bad'], 'bad-ing');
+            renderIngredients('g', data.categories['good'], 'good-ing');
+            attachIngredientListeners();
+
+            // Show the table with animation
+            const totalscorehead = document.getElementById('score_head');
+            const scorenumber = document.getElementById('score');
+            const table = document.getElementById('resultsTable');
+            table.classList.remove('hidden');
+            table.classList.add('fade-in');
+            totalscorehead.classList.remove('hidden');
+            totalscorehead.classList.add('fade-in');
+            scorenumber.classList.remove('hidden');
+            scorenumber.classList.add('fade-in');
+        };
+        const popup = document.getElementById('popupOverlay');
+        const closeBtn = document.getElementById('closePopup');
+        const content = document.getElementById('markdownContent');
+
+        function showPopup(markdown) {
+            content.innerHTML = marked.parse(markdown);
+            popup.classList.remove('hidden');
+        }
+
+        closeBtn.onclick = () => popup.classList.add('hidden');
+
+        function fetchExplanation(ingredient) {
+            content.innerText = "";
+            popup.classList.remove('hidden');
+            closeBtn.style.display = 'none';
+
+            fetch('/explain_ingredient', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ ingredient })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Streaming failed');
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullText = "";
+
+                function read() {
+                    return reader.read().then(({ done, value }) => {
+                        if (done) {
+                            content.innerHTML = marked.parse(fullText);
+                            closeBtn.style.display = 'block';
+                            return;
+                        }
+                        const chunk = decoder.decode(value, { stream: true });
+                        fullText += chunk;
+                        content.innerHTML = marked.parse(fullText);  // live update
+                        return read();
+                    });
+                }
+                return read();
+            })
+            .catch(err => {
+                content.innerHTML = `<p style="color:red;">❌ ${err.message}</p>`;
+                closeBtn.style.display = 'block';
+            });
+        }
+
+        // Attach click events to ingredient spans
+        function attachIngredientListeners() {
+            document.querySelectorAll('.ingredient').forEach(el => {
+                el.onclick = () => fetchExplanation(el.innerText);
+            });
+        }
+    </script>
+</body>
+</html>

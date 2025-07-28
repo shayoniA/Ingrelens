@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('./abstractgreen.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    ackground-position: center;
+}
+
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('https://images.unsplash.com/photo-1528731708534-816fe59f90eb') no-repeat center center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.199);
+    z-index: 1;
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+    color: #f0fdf4;
+    animation: fadeInUp 1.5s ease-out;
+    padding: 0 20px;
+}
+
+.headline {
+    font-size: 2.8rem;
+    font-weight: 200;
+    font-family: 'Poppins', sans-serif;
+    color: #f4f4f4;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative; bottom: 30px;
+}
+
+.cta-button {
+    margin-top: 30px;
+    padding: 14px 36px;
+    font-size: 19px; font-family: 'Montserrat', sans-serif;
+    color: white;
+    background-color: rgb(23, 106, 23);
+    border: none; font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(5, 167, 5, 0.4);
+    transition: background 0.3s ease, transform 0.3s ease;
+    animation: fadeIn 2s ease-out;
+    position: relative; top: 20px;
+}
+
+.cta-button:hover {
+    background-color: rgb(12, 85, 12);
+    transform: translateY(-3px) scale(1.03);
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .headline {
+        font-size: 2rem;
+    }
+
+    .cta-button {
+        padding: 12px 28px;
+        font-size: 1rem;
+    }
+}
