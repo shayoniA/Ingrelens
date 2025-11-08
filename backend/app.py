@@ -2,9 +2,9 @@ from flask import Flask, render_template, request, jsonify, Response, stream_wit
 from backend.db import get_info, save_info
 import os
 import re
+import requests
 from backend.ocr import extract_text
 from backend.classify import classify_ingredient
-import ollama
 
 app = Flask(
     __name__,
@@ -48,7 +48,6 @@ def upload():
     }
 
     resultjson = classify_ingredient(ingredients)
-
     bad_key, bad_items = list(resultjson.items())[0]
     good_key, good_items = list(resultjson.items())[1]
     for bading in bad_items:
@@ -62,7 +61,7 @@ def upload():
 
 @app.route('/explain_ingredient', methods=['POST'])
 def explain_ingredient():
-    from ollama import chat
+    # from ollama import chat
     import time
     data = request.json
     ingredient = data.get('ingredient', '').strip()
@@ -94,15 +93,22 @@ def explain_ingredient():
     - Point 2
     """
 
+    OLLAMA_API_URL = os.getenv("OLLAMA_API_URL", "http://localhost:11434")
+
     def generate_and_store():
         full_text = ""
         try:
-            stream = ollama.chat(model="mistral", messages=[{"role": "user", "content": prompt}], stream=True)
-            for chunk in stream:
-                content = chunk['message']['content']
-                full_text += content
-                yield content
-                time.sleep(0.02)
+            with requests.post(
+                f"{OLLAMA_API_URL}/api/chat",
+                json={"model": "mistral", "messages": [{"role": "user", "content": prompt}], "stream": True},
+                stream=True,
+            ) as response:
+                for line in response.iter_lines():
+                    if line:
+                        text = line.decode('utf-8')
+                        full_text += text
+                        yield text
+                        time.sleep(0.02)
         finally:
             if full_text.strip():
                 save_info(ingredient, full_text)
