@@ -28,33 +28,22 @@ def upload():
     path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     file.save(path)
 
-    # OCR extract
     raw_text = extract_text(path)
-    raw_text = re.sub(r'\bingredients?\b', '', raw_text, flags=re.IGNORECASE)  # Removing starting word 'Ingredients' or similar
-    raw_text = re.sub(r"[^\w\s,.\-]", '', raw_text)  # Removing all punctuations except ,.-
+    raw_text = re.sub(r'\bingredients?\b', '', raw_text, flags=re.IGNORECASE)
+    raw_text = re.sub(r"[^\w\s,.\-]", '', raw_text)
     print("\n📄 OCR Raw Text:\n", raw_text)
 
-    # Ingredient list
     ingredients = [i.strip() for i in raw_text.replace("\n", " ").split(",") if i.strip()]
     print("\n🧪 Extracted Ingredients List:\n", ingredients)
-
-    result = {
-        # "ingredients": [],
-        "categories": {
-            "bad": [],
-            "good": []
-        },
-        "total_score": 0
-    }
 
     resultjson = classify_ingredient(ingredients)
     bad_key, bad_items = list(resultjson.items())[0]
     good_key, good_items = list(resultjson.items())[1]
-    for bading in bad_items:
-        result["categories"]["bad"].append(bading)
-    for gooding in good_items:
-        result["categories"]["good"].append(gooding)
-    result["total_score"] = (len(good_items)*5)-(len(bad_items)*5)
+
+    result = {
+        "categories": {"bad": bad_items, "good": good_items},
+        "total_score": (len(good_items) * 5) - (len(bad_items) * 5)
+    }
 
     return jsonify(result)
     
