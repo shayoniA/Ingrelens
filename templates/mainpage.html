@@ -14,6 +14,12 @@
         <button type="submit">Analyze</button>
     </form>
 
+    <div id="loading" class="hidden">
+        <span class="dot">.</span>
+        <span class="dot">.</span>
+        <span class="dot">.</span>
+    </div>
+
     <h3 class="scorehead hidden" id="score_head">Total Health Score</h3>
     <div class="hidden" id="score">--</div>
     <div class="table-container hidden" id="resultsTable">
@@ -47,32 +53,44 @@
         document.getElementById('uploadForm').onsubmit = async function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-            const response = await fetch('/upload', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            document.getElementById('score').innerText = data.total_score;
-            function renderIngredients(id, list, className) {
-                document.getElementById(id).innerHTML = list.map(ing =>
-                    `<span class="ingredient ${className}">${ing.trim()}</span>`
-                ).join(', ');
-            }
-            renderIngredients('b', data.categories['bad'], 'bad-ing');
-            renderIngredients('g', data.categories['good'], 'good-ing');
-            attachIngredientListeners();
+            // Show loading
+            const loading = document.getElementById('loading');
+            loading.classList.remove('hidden');
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                // Hide loading
+                loading.classList.add('hidden');
+                // Render results
+                document.getElementById('score').innerText = data.total_score;
 
-            // Show the table with animation
-            const totalscorehead = document.getElementById('score_head');
-            const scorenumber = document.getElementById('score');
-            const table = document.getElementById('resultsTable');
-            table.classList.remove('hidden');
-            table.classList.add('fade-in');
-            totalscorehead.classList.remove('hidden');
-            totalscorehead.classList.add('fade-in');
-            scorenumber.classList.remove('hidden');
-            scorenumber.classList.add('fade-in');
+                function renderIngredients(id, list, className) {
+                    document.getElementById(id).innerHTML = list.map(ing =>
+                        `<span class="ingredient ${className}">${ing.trim()}</span>`
+                    ).join(', ');
+                }
+                renderIngredients('b', data.categories['bad'], 'bad-ing');
+                renderIngredients('g', data.categories['good'], 'good-ing');
+                attachIngredientListeners();
+                // Show the table with animation
+                const totalscorehead = document.getElementById('score_head');
+                const scorenumber = document.getElementById('score');
+                const table = document.getElementById('resultsTable');
+                table.classList.remove('hidden');
+                table.classList.add('fade-in');
+                totalscorehead.classList.remove('hidden');
+                totalscorehead.classList.add('fade-in');
+                scorenumber.classList.remove('hidden');
+                scorenumber.classList.add('fade-in');
+            } catch (err) {
+                loading.classList.add('hidden');
+                alert("❌ Error fetching classification: " + err.message);
+            }
         };
+
         const popup = document.getElementById('popupOverlay');
         const closeBtn = document.getElementById('closePopup');
         const content = document.getElementById('markdownContent');
