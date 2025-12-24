@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 from backend.app import app
 from backend.db import init_db
 import os
