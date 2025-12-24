@@ -1,5 +1,9 @@
-import ollama
 import json
+import os
+import google.generativeai as genai
+
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 CATEGORY_SCORES = {
     'bad': -5,
@@ -17,9 +21,11 @@ def classify_ingredient(ingredients):
     """
 
     try:
-        response = ollama.chat(model='mistral', messages=[{"role": "user", "content": prompt}])
-        answer = response['message']['content'].strip()
-        result = json.loads(answer)
+        response = model.generate_content(prompt)
+        text = response.text.strip()
+        if "```" in text:
+            text = text.split("```")[1].strip()
+        result = json.loads(text)
         print(f"🧠 LLM Response: {result}")
         return result
     
