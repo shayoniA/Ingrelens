@@ -1,19 +1,19 @@
+from dotenv import load_dotenv
+load_dotenv()
 from flask import Flask, render_template, request, jsonify, Response, stream_with_context
 from backend.db import get_info, save_info
 import os
 import re
 from backend.ocr import extract_text
 from backend.classify import classify_ingredient
-import google.generativeai as genai
+from google import genai
+client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 app = Flask(
     __name__,
     template_folder=os.path.join(os.path.dirname(__file__), '..', 'templates'),
     static_folder=os.path.join(os.path.dirname(__file__), '..', 'static')
 )
-
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-gemini_model = genai.GenerativeModel("gemini-1.5-flash")
 
 UPLOAD_FOLDER = "uploads"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -100,11 +100,14 @@ def explain_ingredient():
     def generate_and_store():
         full_text = ""
         try:
-            stream = gemini_model.generate_content(prompt, stream=True)
-            for chunk in stream:
-                if chunk.text:
-                    full_text += chunk.text
-                    yield chunk.text
+            stream = client.models.generate_content_stream(
+                model="models/gemini-2.5-flash",
+                contents=prompt
+            )
+            for event in stream:
+                if event.text:
+                    full_text += event.text
+                    yield event.text
                     time.sleep(0.02)
         finally:
             if full_text.strip():
