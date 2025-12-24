@@ -59,7 +59,7 @@ def upload():
         result["categories"]["bad"].append(bading)
     for gooding in good_items:
         result["categories"]["good"].append(gooding)
-    result["total_score"] = (len(good_items)*5)-(len(bad_items)*5)
+    result["total_score"] = (int)((len(good_items)/(len(bad_items)+len(good_items)))*100)
 
     return jsonify(result)
     
