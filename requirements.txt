@@ -1,5 +1,5 @@
 flask
 pytesseract
 Pillow
-google-generativeai
+google-genai
 gunicorn
