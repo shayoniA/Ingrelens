@@ -1,5 +1,8 @@
 flask
-pytesseract
-Pillow
+python-dotenv
 google-genai
+Pillow
+pytesseract
+opencv-python
+numpy
 gunicorn
