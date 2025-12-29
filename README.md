@@ -10,7 +10,7 @@ Install Tesseract OCR:  Download and install Tesseract, and add installation pat
 Environment Variables:  Create an *.env* file containing *GOOGLE_API_KEY* and *MONGO_URI* (Make sure your Gemini API key has access to gemini-2.5-flash model). <br>
 Run the App:  *python run.py* <br>
 <br>
-**Key Features**: <br>
+**Key Features**:
 1. **Image-based ingredient extraction** - Upload a product image and automatically extract ingredient text using OCR.
 2. **AI-powered ingredient classification** - Ingredients are classified as good and bad, using LLMs instead of a static rule-based system.
 3. **Dynamic health scoring** - A health score is generated based on ingredient composition.
