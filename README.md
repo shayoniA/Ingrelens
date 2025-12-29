@@ -18,7 +18,7 @@ Run the App:  *python run.py* <br>
 5. **Cached explanations** - Previously explained ingredients are stored to reduce latency and API calls.
 6. **Clean and responsive UI** - Smooth animations, loaders, and intuitive interface for better UX.
 <br>
-**Tech Stack**:
+**Tech Stack**: <br>
 1. **Frontend** - HTML, CSS, JavaScript (React.js, Marked.js)
 2. **Backend** - Python, Flask
 3. **AI & ML** - Google Gemini API (LLM-powered), OCR (computer vision) for text extraction from images.
