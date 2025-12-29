@@ -17,13 +17,13 @@ Run the App:  *python run.py* <br>
 4. **Click-to-explain ingredients** - Click on any ingredient to get streamed explanations, including their positive and negative impacts, rendered in markdown.
 5. **Cached explanations** - Previously explained ingredients are stored to reduce latency and API calls.
 6. **Clean and responsive UI** - Smooth animations, loaders, and intuitive interface for better UX.
-
+<br>
 **Tech Stack**: <br>
-1. Frontend - HTML, CSS, JavaScript (React.js, Marked.js)
-2. Backend - Python, Flask
-3. AI & ML - Google Gemini API (LLM-powered), OCR (computer vision) for text extraction from images.
-4. Database - MongoDB (ingredient explanation caching)
-5. Deployment - Render
+1. **Frontend** - HTML, CSS, JavaScript (React.js, Marked.js)
+2. **Backend** - Python, Flask
+3. **AI & ML** - Google Gemini API (LLM-powered), OCR (computer vision) for text extraction from images.
+4. **Database** - MongoDB (ingredient explanation caching)
+5. **Deployment** - Render
 <br>
 **Why I Built Ingrelens**:  Most ingredient-checking apps Rely on static databases, and Don’t adapt to context/combinations of ingredients. Being interested in AI, LLMs, and real-world applications, I wanted to build something that: <br>
 - Uses AI reasoning, not just DB-lookups <br>
