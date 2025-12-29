@@ -1,9 +1,10 @@
-**Ingrelens**
+**Ingrelens** <br>
 A web app that analyzes cosmetic product ingredients directly from images and explains their impact on skin health. It categorizes ingredients as good or bad, and gives an overall health score to the product, enabling easy comparison between products (the greater the better).
-**Deployed Website**: [https://ingrelens1.onrender.com]
-**Demo Video**: [https://<your-demo-video-link-here>](https://drive.google.com/file/d/1cjAATwds1UuHmvSKC2Dn4ooxX58_pds4/view)
-
-**How to Run**:
+**Deployed Website**: [https://ingrelens1.onrender.com] <br>
+**Demo Video**: [https://<your-demo-video-link-here>](https://drive.google.com/file/d/1cjAATwds1UuHmvSKC2Dn4ooxX58_pds4/view) <br>
+<br>
+<br>
+**How to Run**: <br>
 Create & activate a Virtual Environment:  *python -m venv venv*  -->  *venv\Scripts\activate*
 Install Dependencies:  *pip install -r requirements.txt*
 Install Tesseract OCR:  Download and install Tesseract, and add installation path to your system PATH.
