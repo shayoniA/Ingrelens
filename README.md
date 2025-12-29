@@ -18,6 +18,7 @@ Run the App:  *python run.py* <br>
 5. **Cached explanations** - Previously explained ingredients are stored to reduce latency and API calls.
 6. **Clean and responsive UI** - Smooth animations, loaders, and intuitive interface for better UX.
 <br>
+<br>
 **Tech Stack**: <br>
 1. **Frontend** - HTML, CSS, JavaScript (React.js, Marked.js)
 2. **Backend** - Python, Flask
