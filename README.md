@@ -11,17 +11,13 @@ Ingrelens is a web app that analyzes cosmetic product ingredients directly from 
 
 ### Create and activate a virtual environment
 ```
-
 python -m venv venv
 venv\Scripts\activate
-
 ```
 
 ### Install dependencies
 ```
-
 pip install -r requirements.txt
-
 ```
 
 ### Install Tesseract OCR
@@ -30,18 +26,14 @@ Download and install Tesseract OCR and add its installation path to your system 
 ### Environment variables
 Create a `.env` file containing:
 ```
-
 GOOGLE_API_KEY=your_api_key
 MONGO_URI=your_mongo_uri
-
 ```
 Make sure your Gemini API key has access to the `gemini-2.5-flash` model.
 
 ### Run the application
 ```
-
 python run.py
-
 ```
 
 ---
